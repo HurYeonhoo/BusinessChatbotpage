@@ -48,7 +48,7 @@ def initialize_session_states():
         st.session_state.chat_contents = []
 
 # 폰트 설정
-openai_api_key = "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"
+openai_api_key = st.secrets["OPENAI_API_KEY"]
 fontprop = fm.FontProperties(fname='data/NanumGothic-Bold.ttf')
 
 def main():
