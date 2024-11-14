@@ -3,7 +3,6 @@ pandas
 requests
 beautifulsoup4
 selenium
-seleniumbase
 matplotlib
 konlpy
 wordcloud
