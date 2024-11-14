@@ -105,11 +105,9 @@ def show_management_page():
                 """)
             st.write("");st.write("")
             if st.button("리뷰 분석"):
-                if st.session_state.store_name:
-                    st.session_state.page = "review_analysis"
-                    st.rerun()
-                else:
-                    st.warning("가게 이름을 먼저 입력하세요.")
+                st.session_state.page = "review_analysis"
+                st.rerun()
+
     # 개선 방안
     with col2:
         with st.expander(label='개선 방안', expanded=True):
