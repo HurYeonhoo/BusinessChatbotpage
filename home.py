@@ -29,7 +29,7 @@ from store_analysis import StoreAnalysis
 from utils import get_text, tiktoken_len, get_text_chunks, chunk_dataframe_to_documents, get_vectorstore, get_conversation_chain
 
 # OpenAI API 키 설정
-openai_api_key =  st.secrets['API_KEY']
+openai_api_key =  st.secrets["OPENAI_API_KEY"]
 
 # 페이지 설정
 st.set_page_config(page_title="OneClickMakerChatbot", page_icon="💬")
