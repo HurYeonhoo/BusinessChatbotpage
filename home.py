@@ -14,7 +14,7 @@ from io import BytesIO
 from chatbot_gradio import save_chatbot_config, launch_chatbot
 
 # OpenAI API 키 설정
-openai_api_key = "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"
+openai_api_key = st.secrets["OPENAI_API_KEY"]
 
 # 페이지 설정
 st.set_page_config(page_title="OneClickMakerChatbot", page_icon="💬")
@@ -148,75 +148,6 @@ def main():
     if st.session_state.get('process_success', False):
         st.success("가게 정보 수집이 완료되었습니다!")
 
-
-def create_chatbot(store_name, vectorstore, openai_api_key):
-    """새로운 챗봇 생성 및 설정 저장"""
-    # 고유 ID 생성
-    store_id = str(uuid.uuid4())
-    
-    try:
-        # 챗봇 설정 저장
-        save_chatbot_config(store_id, store_name, vectorstore, openai_api_key)
-        
-        # Gradio 챗봇 실행 및 URL 획득
-        public_url = launch_chatbot(store_id)
-        return store_id, public_url
-    except Exception as e:
-        print(f"Error creating chatbot: {e}")
-        raise
-
-def start_processing(uploaded_files):
-    with st.spinner("가게 정보를 수집 중이에요..."):
-        crawler = Crawling(st.session_state.store_name)
-        st.session_state.info_df = crawler.get_info()
-        info_df_documents = chunk_dataframe_to_documents(st.session_state.info_df)
-        
-        if uploaded_files:
-            files_text = get_text(uploaded_files)
-            text_chunks = get_text_chunks(files_text)
-            combined_chunks = text_chunks + info_df_documents
-        else:
-            combined_chunks = info_df_documents
-
-        vectorstore = get_vectorstore(combined_chunks)
-        # conversation chain은 저장하지 않고 vectorstore만 저장
-        st.session_state.processComplete = True
-
-    try:
-        with st.spinner("챗봇을 생성하고 QR 코드를 만드는 중..."):
-            # 챗봇 생성 및 URL 획득
-            store_id, chatbot_url = create_chatbot(
-                st.session_state.store_name,
-                vectorstore,
-                openai_api_key
-            )
-            st.write(f"{chatbot_url}")
-            # 세션 상태에 저장
-            st.session_state.store_id = store_id
-            st.session_state.chatbot_url = chatbot_url
-            
-            # QR 코드 생성
-            qr = qrcode.make(chatbot_url)
-            img_buffer = BytesIO()
-            qr.save(img_buffer, format='PNG')
-            img_buffer.seek(0)
-        
-
-        # 결과 표시
-        col1, col2 = st.columns([3, 1])
-        
-        with col1:
-            st.success("가게 정보 수집이 완료되었습니다!")
-            st.info(f"챗봇이 생성되었습니다! 다음 링크에서 접속하실 수 있습니다:")
-            st.markdown(f"[{st.session_state.store_name} 챗봇 바로가기]({chatbot_url})")
-        
-        with col2:
-            st.image(img_buffer, caption="챗봇 접속 QR 코드", width=200)
-            
-    except Exception as e:
-        st.error(f"챗봇 생성 중 오류가 발생했습니다: {str(e)}")
-
-'''
 def start_processing(uploaded_files):
     crawler = Crawling(st.session_state.store_name)
     st.session_state.info_df = crawler.get_info()
@@ -232,7 +163,6 @@ def start_processing(uploaded_files):
     vectorstore = get_vectorstore(combined_chunks)
     st.session_state.conversation = get_conversation_chain(vectorstore, openai_api_key)
     st.session_state.processComplete = True
-'''
 
 if __name__ == "__main__":
     main()
