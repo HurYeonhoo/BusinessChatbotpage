@@ -7,10 +7,6 @@ from utils import get_text, get_text_chunks, chunk_dataframe_to_documents, get_v
 from review_crawling import Crawling
 from review_classification import Classification
 import os
-import pickle
-import uuid
-import qrcode
-from io import BytesIO
 from chatbot_gradio import save_chatbot_config, launch_chatbot
 
 # OpenAI API 키 설정
