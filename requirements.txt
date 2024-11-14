@@ -15,3 +15,5 @@ tiktoken
 unstructured
 docx2txt
 webdriver_manager
+transformers
+sentence-transformers
