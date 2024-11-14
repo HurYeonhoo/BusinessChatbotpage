@@ -2,6 +2,7 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
+from selenium.common.exceptions import NoSuchElementException
 import time
 import requests
 import re
@@ -28,7 +29,8 @@ class Crawling:
             "information": "T8RFa",
             "menu/list": "place_section_content",
             "feed": "place_section_content",
-            "home": "PIbes"
+            "home": "PIbes",
+            "booking": "place_section_content"
         }
         info_result = {}
 
@@ -36,11 +38,15 @@ class Crawling:
             url = f"https://pcmap.place.naver.com/restaurant/{self.store_id}/{tab}"
             driver = webdriver.Chrome()
             driver.get(url)
-            content = driver.find_element(By.CLASS_NAME, class_name).text
+            try: # 수정
+                content =  driver.find_element(By.CLASS_NAME, class_name).text # 정보 가져오기
+            except NoSuchElementException:
+                content = None
             info_result[tab] = content
             driver.quit()
 
         info_df = pd.DataFrame({key: [value] for key, value in info_result.items()})
+        info_df = info_df.dropna(axis=1) 
         return info_df
 
     def get_reviews(self):
