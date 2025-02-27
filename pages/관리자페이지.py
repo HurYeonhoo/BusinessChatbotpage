@@ -48,7 +48,7 @@ def initialize_session_states():
         st.session_state.chat_contents = []
 
 # 폰트 설정
-openai_api_key = st.secrets["OPENAI_API_KEY"]
+openai_api_key = "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"
 fontprop = fm.FontProperties(fname='data/NanumGothic-Bold.ttf')
 
 def main():
@@ -90,89 +90,96 @@ def show_management_page():
         st.write(""); st.write(""); st.write("")
     else:  # 가게 이름이 없는 경우
         st.write("")
-        st.header("리뷰들을 관리해보세요!")
+        st.header("⚙️리뷰들을 관리해보세요!")
         st.write(""); st.write(""); st.write("")
 
-    col1, col2 = st.columns(2)
-
     # 리뷰 분석
-    with col1:
-        with st.expander(label="리뷰 분석", expanded=True):
-            st.markdown("""
-                좋은 리뷰와 나쁜 리뷰를 분석해드립니다!
-                
-                고객의 생각을 한 눈에 확인하세요! 
+    with st.expander(label="📝 리뷰 분석", expanded=True):
+        st.markdown("""
+                고객이 남긴 좋은 리뷰와 나쁜 리뷰를 정밀하게 분석
+                        
+                    ✔ 긍정적인 리뷰 분석
+                        
+                    ✔ 부정적인 리뷰 분석
+
+                    ✔ 주요 키워드 시각화
+
                 """)
-            st.write("");st.write("")
-            if st.button("리뷰 분석"):
+        if st.button("리뷰 분석"):
+            if st.session_state.store_name:
                 st.session_state.page = "review_analysis"
                 st.rerun()
-
+            else:
+                st.warning("가게 이름을 먼저 입력하세요.")
     # 개선 방안
-    with col2:
-        with st.expander(label='개선 방안', expanded=True):
-            st.markdown("""
-                리뷰를 바탕으로 가게의 개선 방안을 알려드립니다!
+    with st.expander(label='🔧 개선 방안', expanded=True):
+        st.markdown("""
+                리뷰를 바탕으로 가게의 개선 방안 분석
                         
-                문제점 분석을 통해 가게 성장의 새로운 기회를 제안합니다! 
-                """)
-            if st.button("개선 방안"):
-                if st.session_state.review_analysis_complete:
-                    st.session_state.page = "improvement_suggestions"
-                    st.rerun()
-                else:
-                    st.warning("리뷰 분석을 먼저 완료하세요.")
+                    ✔ 리뷰 기반 문제점 분석
 
-    col3, col4 = st.columns(2)
-    # 마케팅 방법
-    with col3:
-        with st.expander(label='마케팅 추천', expanded=True):
-            st.markdown("""
-                고객 선호도를 반영한 맞춤형 마케팅 전략을 추천해드립니다.
-                
-                가게를 더욱 발전시킬 수 있어요!
+                    ✔ 서비스 및 운영 개선 제안
+
                 """)
-            st.write(""); st.write("")
-            if st.button("마케팅 추천"):
-                if st.session_state.review_analysis_complete:
-                    st.session_state.page = "marketing_tips"
-                    st.rerun()
-                else:
-                    st.warning("리뷰 분석을 먼저 완료하세요.")
+        if st.button("개선 방안"):
+            if st.session_state.review_analysis_complete:
+                st.session_state.page = "improvement_suggestions"
+                st.rerun()
+            else:
+                st.warning("리뷰 분석을 먼저 완료하세요.")
+
+    # 마케팅 방법
+    with st.expander(label='📢 마케팅 추천', expanded=True):
+        st.markdown("""
+                고객의 선호도를 반영한 맞춤형 마케팅 전략 추천
+                        
+                    ✔ 리뷰 기반 마케팅 인사이트
+
+                    ✔ 고객 맞춤 프로모션 제안
+
+                """)
+        if st.button("마케팅 추천"):
+            if st.session_state.review_analysis_complete:
+                st.session_state.page = "marketing_tips"
+                st.rerun()
+            else:
+                st.warning("리뷰 분석을 먼저 완료하세요.")
 
     # 동종 업계 비교 분석
-    with col4:
-        with st.expander(label='동종 업계 비교 분석', expanded=True):
-            st.markdown("""
-                다른 가게와 어떤 차이점이 있는지 비교해드려요.
-                
-                다른 가게와 차별화를 해보세요!
+    with st.expander(label='📊 동종 업계 비교 분석', expanded=True):
+        st.markdown("""
+                경쟁 가게를 분석하여 차별화된 포인트 파악
+
+                    ✔ 업계 트렌드 파악
+                        
+                    ✔ 경쟁 가게 비교
+                        
+                    ✔ 강점 및 개선점 제안
+                        
                 """)
-            st.write(""); st.write("")
-            if st.button("동종 업계 비교 분석"):
-                if st.session_state.review_analysis_complete:
-                    st.session_state.page = "store_analysis"
-                    st.rerun()
-                else:
-                    st.warning("리뷰 분석을 먼저 완료하세요.")
+        if st.button("동종 업계 비교 분석"):
+            if st.session_state.review_analysis_complete:
+                st.session_state.page = "store_analysis"
+                st.rerun()
+            else:
+                st.warning("리뷰 분석을 먼저 완료하세요.")
 
     # 세 번째 행: 3개의 열 (빈칸-내용-빈칸 구조)
-    col_empty1, col5, col_empty2 = st.columns([1, 2, 1])
+    with st.expander(label='💬 대화 내용 분석', expanded=True):
+        st.markdown("""
+                손님이 챗봇을 통해 남긴 대화 내용을 분석하여 고객의 관심사와 주요 문의 사항 파악
+                        
+                    ✔ 주요 질문 유형 분석
 
-    with col5:
-        with st.expander(label='대화 내용 분석', expanded=True):
-            st.markdown("""
-                손님이 사용한 챗봇의 대화 내용을 분석해드립니다.
-                
-                어떤 질문을 가장 많이 하는지 알 수 있어요!
+                    ✔ 대화 패턴 분석
+                        
                 """)
-            st.write(""); st.write("")
-            if st.button("대화 내용 분석"):
-                if st.session_state.chatbot_finish:
-                    st.session_state.page = "content_analysis"
-                    st.rerun()
-                else:
-                    st.warning("채팅이 끝나지 않았습니다.")
+        if st.button("대화 내용 분석"):
+            if st.session_state.chatbot_finish:
+                st.session_state.page = "content_analysis"
+                st.rerun()
+            else:
+                st.warning("채팅이 끝나지 않았습니다.")
 
 
 # 각 기능별 함수 구현
