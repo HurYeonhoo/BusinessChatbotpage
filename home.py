@@ -1,12 +1,32 @@
 import streamlit as st
 import tiktoken
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
+import pandas as pd
+import matplotlib.pyplot as plt
+import matplotlib.font_manager as fm
+from loguru import logger
 from langchain.chains import ConversationalRetrievalChain
 from langchain.chat_models import ChatOpenAI
-from langchain.memory import ConversationBufferMemory, StreamlitChatMessageHistory
-from utils import get_text, get_text_chunks, chunk_dataframe_to_documents, get_vectorstore, get_conversation_chain
+from langchain.document_loaders import PyPDFLoader, Docx2txtLoader, UnstructuredPowerPointLoader
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain.embeddings import HuggingFaceEmbeddings
+from langchain.memory import ConversationBufferMemory
+from langchain.vectorstores import FAISS
+from langchain.callbacks import get_openai_callback
+from langchain.memory import StreamlitChatMessageHistory
+from langchain.docstore.document import Document
+
+from review_feedback import ReviewFeedback
+from review_marketing import ReviewMarketing
 from review_crawling import Crawling
 from review_classification import Classification
-import os
+from chat_analysis import ChatAnalysis
+from word import SentimentWordCloud
+from store_analysis import StoreAnalysis
+from utils import get_text, tiktoken_len, get_text_chunks, chunk_dataframe_to_documents, get_vectorstore, get_conversation_chain
 
 # OpenAI API 키 설정
 openai_api_key = st.secrets["OPENAI_API_KEY"]
@@ -77,14 +97,14 @@ def main():
     # 세션 상태 초기화
     initialize_session_states()
 
-    st.title(":blue[리뷰 분석] 및 :blue[챗봇 생성]💩👋")
+    st.title("💬:blue[리뷰 분석] 및 :blue[가게 챗봇 생성]")
     st.write("")
     st.markdown("""
-        step☝️. 가게 이름을 입력해주세요.
+        1️⃣step1️⃣. 가게 이름을 입력해주세요.
         
-        step✌️. 추가로 원하는 정보는 pdf를 제출하세요.
+        2️⃣step2️⃣. 추가로 원하는 정보는 pdf를 제출하세요.
         
-        step🤞. Process 버튼을 클릭하세요!
+        3️⃣step3️⃣. Process 버튼을 클릭하세요!
     """)
     st.divider()
 
@@ -158,6 +178,7 @@ def start_processing(uploaded_files):
     vectorstore = get_vectorstore(combined_chunks)
     st.session_state.conversation = get_conversation_chain(vectorstore, openai_api_key)
     st.session_state.processComplete = True
+
 
 if __name__ == "__main__":
     main()
