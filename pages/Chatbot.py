@@ -1,14 +1,6 @@
 import sys
 import os
 from pathlib import Path
-
-import matplotlib.pyplot as plt
-import matplotlib.font_manager as fm
-
-# 프로젝트 루트 디렉토리 추가
-project_root = Path(__file__).parent.parent
-sys.path.append(str(project_root))
-
 import streamlit as st
 import tiktoken
 from selenium import webdriver
@@ -23,10 +15,10 @@ from langchain.chat_models import ChatOpenAI
 from langchain.document_loaders import PyPDFLoader, Docx2txtLoader, UnstructuredPowerPointLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.embeddings import HuggingFaceEmbeddings
-from langchain.memory import ConversationBufferMemory
 from langchain.vectorstores import FAISS
 from langchain.callbacks import get_openai_callback
 from langchain.memory import StreamlitChatMessageHistory
+from langchain.memory import ConversationBufferMemory
 
 # 세션 상태 초기화 및 확인
 def initialize_session_states():
@@ -45,9 +37,9 @@ def main():
     initialize_session_states()
     # 헤더 부분
     if st.session_state.store_name:
-        st.header(f"저는 :violet[*{st.session_state.store_name}*]&nbsp;&nbsp;음식점의 챗봇입니다!💩")
+        st.header(f"저는 :violet[*{st.session_state.store_name}*]&nbsp;&nbsp;음식점의 챗봇입니다!")
     else:
-        st.subheader("저는 챗봇입니다!💩")
+        st.subheader("Chatbot")
     
     # 메시지 컨테이너 생성
     chat_container = st.container()
